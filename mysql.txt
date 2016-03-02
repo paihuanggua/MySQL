@@ -1,7 +1,2059 @@
-一、join从句
-  join类型：
-      1、内连接（INNER）;
-      2、全外链接（full outer）；
-      3、左外连接（left outer）；
-      4、右外连接（right outer）；
-      5、交叉连接（cross）
+﻿===========================================================================
+mysql> select version();
++-----------+
+| version() |
++-----------+
+| 5.5.38    |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select now();
++---------------------+
+| now()               |
++---------------------+
+| 2016-03-01 16:32:17 |
++---------------------+
+1 row in set (0.00 sec)
+
+===========================================================================
+mysql> create database t1;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| db                 |
+| mysql              |
+| performance_schema |
+| t1                 |
+| t2                 |
+| test               |
+| user               |
++--------------------+
+8 rows in set (0.00 sec)
+
+mysql> create database t1;
+ERROR 1007 (HY000): Can't create database 't1'; database exists
+mysql> create database if not exists t1;
+Query OK, 1 row affected, 1 warning (0.00 sec)
+
+mysql> show warnings;
++-------+------+---------------------------------------------+
+| Level | Code | Message                                     |
++-------+------+---------------------------------------------+
+| Note  | 1007 | Can't create database 't1'; database exists |
++-------+------+---------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> show create database t1;
++----------+------------------------------------------------------------+
+| Database | Create Database                                            |
++----------+------------------------------------------------------------+
+| t1       | CREATE DATABASE `t1` /*!40100 DEFAULT CHARACTER SET gbk */ |
++----------+------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> create database if not exists t1 character set utf8;
+Query OK, 1 row affected, 1 warning (0.00 sec)
+
+mysql> show create database t2;
++----------+-------------------------------------------------------------+
+| Database | Create Database                                             |
++----------+-------------------------------------------------------------+
+| t2       | CREATE DATABASE `t2` /*!40100 DEFAULT CHARACTER SET utf8 */ |
++----------+-------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+
+mysql> alter database t1 character set utf8;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> show create database t1;
++----------+-------------------------------------------------------------+
+| Database | Create Database                                             |
++----------+-------------------------------------------------------------+
+| t1       | CREATE DATABASE `t1` /*!40100 DEFAULT CHARACTER SET utf8 */ |
++----------+-------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+
+mysql> drop database t1;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| db                 |
+| mysql              |
+| performance_schema |
+| t2                 |
+| test               |
+| user               |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> drop database t1;
+ERROR 1008 (HY000): Can't drop database 't1'; database doesn't exist
+mysql> drop database if exists t1;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> show warnings;
++-------+------+--------------------------------------------------+
+| Level | Code | Message                                          |
++-------+------+--------------------------------------------------+
+| Note  | 1008 | Can't drop database 't1'; database doesn't exist |
++-------+------+--------------------------------------------------+
+1 row in set (0.00 sec)
+
+================================================================================================
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| db                 |
+| mysql              |
+| performance_schema |
+| t2                 |
+| test               |
+| user               |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> select database();
++------------+
+| database() |
++------------+
+| test       |
++------------+
+1 row in set (0.00 sec)
+
+mysql> create table tb1(
+    -> username varchar(20),
+    -> age tinyint unsigned,
+    -> salary float(8,2) unsigned
+    -> );
+Query OK, 0 rows affected (0.13 sec)
+
+mysql> show tables;
++----------------+
+| Tables_in_test |
++----------------+
+| tb1            |
++----------------+
+1 row in set (0.02 sec)
+
+mysql> show tables from mysql;
++---------------------------+
+| Tables_in_mysql           |
++---------------------------+
+| columns_priv              |
+| db                        |
+| event                     |
+| func                      |
+| general_log               |
+| help_category             |
+| help_keyword              |
+| help_relation             |
+| help_topic                |
+| host                      |
+| ndb_binlog_index          |
+| plugin                    |
+| proc                      |
+| procs_priv                |
+| proxies_priv              |
+| servers                   |
+| slow_log                  |
+| tables_priv               |
+| time_zone                 |
+| time_zone_leap_second     |
+| time_zone_name            |
+| time_zone_transition      |
+| time_zone_transition_type |
+| user                      |
++---------------------------+
+24 rows in set (0.00 sec)
+
+mysql> select database();
++------------+
+| database() |
++------------+
+| test       |
++------------+
+1 row in set (0.00 sec)
+
+
+mysql> show columns from tb1;
++----------+---------------------+------+-----+---------+-------+
+| Field    | Type                | Null | Key | Default | Extra |
++----------+---------------------+------+-----+---------+-------+
+| username | varchar(20)         | YES  |     | NULL    |       |
+| age      | tinyint(3) unsigned | YES  |     | NULL    |       |
+| salary   | float(8,2) unsigned | YES  |     | NULL    |       |
++----------+---------------------+------+-----+---------+-------+
+3 rows in set (0.04 sec)
+
+mysql> insert tb1 values('Tom',25,1234.56);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert tb1 values('Lilei',30);
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> insert tb1(username,salary) values('John',7000.99);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from tb1;
++----------+------+---------+
+| username | age  | salary  |
++----------+------+---------+
+| Tom      |   25 | 1234.56 |
+| John     | NULL | 7000.99 |
++----------+------+---------+
+2 rows in set (0.00 sec)
+
+================================================================================================
+mysql> create table tb2(
+    -> username varchar(20) not null,
+    -> age tinyint unsigned null
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> show columns from tb2;
++----------+---------------------+------+-----+---------+-------+
+| Field    | Type                | Null | Key | Default | Extra |
++----------+---------------------+------+-----+---------+-------+
+| username | varchar(20)         | NO   |     | NULL    |       |
+| age      | tinyint(3) unsigned | YES  |     | NULL    |       |
++----------+---------------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> insert tb2 values('Tom',null);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from tb2;
++----------+------+
+| username | age  |
++----------+------+
+| Tom      | NULL |
++----------+------+
+1 row in set (0.00 sec)
+
+mysql> insert tb2 values(null,30);
+ERROR 1048 (23000): Column 'username' cannot be null
+mysql> insert tb2 values('Join');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> insert tb2 values('Join',30);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from tb2;
++----------+------+
+| username | age  |
++----------+------+
+| Tom      | NULL |
+| Join     |   30 |
++----------+------+
+2 rows in set (0.00 sec)
+
+
+mysql> create table tb3(
+    -> id smallint unsigned auto_increment,
+    -> username varchar(30) not null
+    -> );
+ERROR 1075 (42000): Incorrect table definition; there can be only one auto colum
+n and it must be defined as a key
+mysql> create table tb3(
+    -> id smallint unsigned auto_increment primary key,
+    -> username varchar(30) not null
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+================================================================================================
+mysql> show columns from tb3;
++----------+----------------------+------+-----+---------+----------------+
+| Field    | Type                 | Null | Key | Default | Extra          |
++----------+----------------------+------+-----+---------+----------------+
+| id       | smallint(5) unsigned | NO   | PRI | NULL    | auto_increment |
+| username | varchar(30)          | NO   |     | NULL    |                |
++----------+----------------------+------+-----+---------+----------------+
+2 rows in set (0.01 sec)
+
+mysql> insert tb3(username) values('Tom');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert tb3(username) values ('John');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert tb3(username) values('Haha');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert tb3(username) values('Nihao');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from tb3;
++----+----------+
+| id | username |
++----+----------+
+|  1 | Tom      |
+|  2 | John     |
+|  3 | Haha     |
+|  4 | Nihao    |
++----+----------+
+4 rows in set (0.00 sec)
+================================================================================================
+//primary key不和auto_increment一块使用，主键字段是允许赋值的；primary key的值不能相同；
+mysql> create table tb4(
+    -> id smallint unsigned primary key,
+    -> username varchar(20) not null
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> insert tb4 values(22,'Tom');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert tb4 values(66,'John');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from tb4;
++----+----------+
+| id | username |
++----+----------+
+| 22 | Tom      |
+| 66 | John     |
++----+----------+
+2 rows in set (0.00 sec)
+
+mysql> insert tb4 values(66,'Hahn');
+ERROR 1062 (23000): Duplicate entry '66' for key 'PRIMARY'
+
+=========================================================================
+mysql> create table tb5(
+    -> id smallint unsigned auto_increment primary key,
+    -> username varchar(20) not null unique key,
+    -> age tinyint unsigned
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> show columns from tb5;
++----------+----------------------+------+-----+---------+----------------+
+| Field    | Type                 | Null | Key | Default | Extra          |
++----------+----------------------+------+-----+---------+----------------+
+| id       | smallint(5) unsigned | NO   | PRI | NULL    | auto_increment |
+| username | varchar(20)          | NO   | UNI | NULL    |                |
+| age      | tinyint(3) unsigned  | YES  |     | NULL    |                |
++----------+----------------------+------+-----+---------+----------------+
+3 rows in set (0.01 sec)
+
+mysql> insert tb5(username,age) values('Tom',null);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert tb5(username,age) values('John',33);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert tb5(username,age) values('John',44);
+ERROR 1062 (23000): Duplicate entry 'John' for key 'username'
+mysql> select * from tb5;
++----+----------+------+
+| id | username | age  |
++----+----------+------+
+|  1 | Tom      | NULL |
+|  2 | John     |   33 |
++----+----------+------+
+2 rows in set (0.00 sec)
+================================================================================================
+mysql> create table tb6(
+    -> id smallint unsigned auto_increment primary key,
+    -> username varchar(20) not null unique key,
+    -> sex enum('1','2','3') default '3'
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> show columns from tb6;
++----------+----------------------+------+-----+---------+----------------+
+| Field    | Type                 | Null | Key | Default | Extra          |
++----------+----------------------+------+-----+---------+----------------+
+| id       | smallint(5) unsigned | NO   | PRI | NULL    | auto_increment |
+| username | varchar(20)          | NO   | UNI | NULL    |                |
+| sex      | enum('1','2','3')    | YES  |     | 3       |                |
++----------+----------------------+------+-----+---------+----------------+
+3 rows in set (0.01 sec)
+
+mysql> insert tb6(username) values('Tom');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from tb6;
++----+----------+------+
+| id | username | sex  |
++----+----------+------+
+|  1 | Tom      | 3    |
++----+----------+------+
+1 row in set (0.00 sec)
+
+================================================================================================
+mysql> create table provinces(
+    -> id smallint unsigned auto_increment primary key,
+    -> pname varchar(20) not null
+    -> );
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> show create table provinces;
++-----------+-------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------+
+| Table     | Create Table
+
+                          |
++-----------+-------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------+
+| provinces | CREATE TABLE `provinces` (
+  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `pname` varchar(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 |
++-----------+-------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------+
+1 row in set (0.00 sec)
+
+mysql> create table user1(
+    -> id smallint unsigned primary key auto_increment,
+    -> username varchar(10) not null,
+    -> pid smallint unsigned,
+    -> foreign key (pid) references provinces (id) on delete cascade
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> insert provinces(pname) values('A');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert provinces(pname) values('B');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert provinces(pname) values('C');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> SELECT * FROM provinces;
++----+-------+
+| id | pname |
++----+-------+
+|  1 | A     |
+|  2 | B     |
+|  3 | C     |
++----+-------+
+3 rows in set (0.00 sec)
+
+mysql> insert user1(username,pid) values('Tom',3);
+Query OK, 1 row affected (0.03 sec)
+mysql> insert user1(username,pid) values('Tom',7);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint f
+ails (`test`.`user1`, CONSTRAINT `user1_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `
+provinces` (`id`) ON DELETE CASCADE)
+mysql> insert user1(username,pid) values('Tom',1);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert user1(username,pid) values('Rose',3);
+Query OK, 1 row affected (0.16 sec)
+mysql> insert user1(username,pid) values('John',2);
+Query OK, 1 row affected (0.08 sec)
+mysql> select * from user1;
++----+----------+------+
+| id | username | pid  |
++----+----------+------+
+|  1 | Tom      |    3 |
+|  3 | Tom      |    1 |
+|  4 | Rose     |    3 |
+|  5 | John     |    2 |
++----+----------+------+
+4 rows in set (0.00 sec)
+
+mysql> delete from provinces where id=3;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from provinces;
++----+-------+
+| id | pname |
++----+-------+
+|  1 | A     |
+|  2 | B     |
++----+-------+
+2 rows in set (0.00 sec)
+
+mysql> select * from user1;
++----+----------+------+
+| id | username | pid  |
++----+----------+------+
+|  3 | Tom      |    1 |
+|  5 | John     |    2 |
++----+----------+------+
+2 rows in set (0.00 sec)
+
+//修改数据表
+mysql> show columns from user1;
++----------+----------------------+------+-----+---------+----------------+
+| Field    | Type                 | Null | Key | Default | Extra          |
++----------+----------------------+------+-----+---------+----------------+
+| id       | smallint(5) unsigned | NO   | PRI | NULL    | auto_increment |
+| username | varchar(10)          | NO   |     | NULL    |                |
+| pid      | smallint(5) unsigned | YES  | MUL | NULL    |                |
++----------+----------------------+------+-----+---------+----------------+
+3 rows in set (0.01 sec)
+
+mysql> alter table user1 add age tinyint unsigned not null default 10;
+Query OK, 2 rows affected (0.19 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> show columns from user1;
++----------+----------------------+------+-----+---------+----------------+
+| Field    | Type                 | Null | Key | Default | Extra          |
++----------+----------------------+------+-----+---------+----------------+
+| id       | smallint(5) unsigned | NO   | PRI | NULL    | auto_increment |
+| username | varchar(10)          | NO   |     | NULL    |                |
+| pid      | smallint(5) unsigned | YES  | MUL | NULL    |                |
+| age      | tinyint(3) unsigned  | NO   |     | 10      |                |
++----------+----------------------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+
+mysql> alter table user1 add password varchar(32) not null after username;
+Query OK, 2 rows affected (0.22 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> show columns from user1;
++----------+----------------------+------+-----+---------+----------------+
+| Field    | Type                 | Null | Key | Default | Extra          |
++----------+----------------------+------+-----+---------+----------------+
+| id       | smallint(5) unsigned | NO   | PRI | NULL    | auto_increment |
+| username | varchar(10)          | NO   |     | NULL    |                |
+| password | varchar(32)          | NO   |     | NULL    |                |
+| pid      | smallint(5) unsigned | YES  | MUL | NULL    |                |
+| age      | tinyint(3) unsigned  | NO   |     | 10      |                |
++----------+----------------------+------+-----+---------+----------------+
+5 rows in set (0.01 sec)
+
+mysql> alter table user1 add truename varchar(20) not null first;
+Query OK, 2 rows affected (0.22 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> show columns from user1;
++----------+----------------------+------+-----+---------+----------------+
+| Field    | Type                 | Null | Key | Default | Extra          |
++----------+----------------------+------+-----+---------+----------------+
+| truename | varchar(20)          | NO   |     | NULL    |                |
+| id       | smallint(5) unsigned | NO   | PRI | NULL    | auto_increment |
+| username | varchar(10)          | NO   |     | NULL    |                |
+| password | varchar(32)          | NO   |     | NULL    |                |
+| pid      | smallint(5) unsigned | YES  | MUL | NULL    |                |
+| age      | tinyint(3) unsigned  | NO   |     | 10      |                |
++----------+----------------------+------+-----+---------+----------------+
+6 rows in set (0.01 sec)
+
+mysql> alter table user1 add Haha varchar(20),add Haha2 varchar(40);
+Query OK, 2 rows affected (0.39 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> show columns from user1;
++----------+----------------------+------+-----+---------+----------------+
+| Field    | Type                 | Null | Key | Default | Extra          |
++----------+----------------------+------+-----+---------+----------------+
+| truename | varchar(20)          | NO   |     | NULL    |                |
+| id       | smallint(5) unsigned | NO   | PRI | NULL    | auto_increment |
+| username | varchar(10)          | NO   |     | NULL    |                |
+| password | varchar(32)          | NO   |     | NULL    |                |
+| pid      | smallint(5) unsigned | YES  | MUL | NULL    |                |
+| age      | tinyint(3) unsigned  | NO   |     | 10      |                |
+| Haha     | varchar(20)          | YES  |     | NULL    |                |
+| Haha2    | varchar(40)          | YES  |     | NULL    |                |
++----------+----------------------+------+-----+---------+----------------+
+8 rows in set (0.01 sec)
+
+mysql> alter table user1 drop truename;
+Query OK, 2 rows affected (0.24 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> show columns from user1;
++----------+----------------------+------+-----+---------+----------------+
+| Field    | Type                 | Null | Key | Default | Extra          |
++----------+----------------------+------+-----+---------+----------------+
+| id       | smallint(5) unsigned | NO   | PRI | NULL    | auto_increment |
+| username | varchar(10)          | NO   |     | NULL    |                |
+| password | varchar(32)          | NO   |     | NULL    |                |
+| pid      | smallint(5) unsigned | YES  | MUL | NULL    |                |
+| age      | tinyint(3) unsigned  | NO   |     | 10      |                |
+| Haha     | varchar(20)          | YES  |     | NULL    |                |
+| Haha2    | varchar(40)          | YES  |     | NULL    |                |
++----------+----------------------+------+-----+---------+----------------+
+7 rows in set (0.01 sec)
+
+mysql> alter table user1 drop Haha,drop Haha2;
+Query OK, 2 rows affected (0.24 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> show columns from user1;
++----------+----------------------+------+-----+---------+----------------+
+| Field    | Type                 | Null | Key | Default | Extra          |
++----------+----------------------+------+-----+---------+----------------+
+| id       | smallint(5) unsigned | NO   | PRI | NULL    | auto_increment |
+| username | varchar(10)          | NO   |     | NULL    |                |
+| password | varchar(32)          | NO   |     | NULL    |                |
+| pid      | smallint(5) unsigned | YES  | MUL | NULL    |                |
+| age      | tinyint(3) unsigned  | NO   |     | 10      |                |
++----------+----------------------+------+-----+---------+----------------+
+5 rows in set (0.01 sec)
+
+mysql> alter table user1 add truename varchar(20),drop age;
+Query OK, 2 rows affected (0.24 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> show columns from user1;
++----------+----------------------+------+-----+---------+----------------+
+| Field    | Type                 | Null | Key | Default | Extra          |
++----------+----------------------+------+-----+---------+----------------+
+| id       | smallint(5) unsigned | NO   | PRI | NULL    | auto_increment |
+| username | varchar(10)          | NO   |     | NULL    |                |
+| password | varchar(32)          | NO   |     | NULL    |                |
+| pid      | smallint(5) unsigned | YES  | MUL | NULL    |                |
+| truename | varchar(20)          | YES  |     | NULL    |                |
++----------+----------------------+------+-----+---------+----------------+
+5 rows in set (0.01 sec)
+
+mysql> create table user2(
+    -> username varchar(10) not null,
+    -> pid smallint unsigned
+    -> );
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> show create table user2;
++-------+---------------------------------------------------------------------
+---------------------------------------------------------------------+
+| Table | Create Table
+                                                                     |
++-------+---------------------------------------------------------------------
+---------------------------------------------------------------------+
+| user2 | CREATE TABLE `user2` (
+  `username` varchar(10) NOT NULL,
+  `pid` smallint(5) unsigned DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 |
++-------+---------------------------------------------------------------------
+---------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> alter table user2 add id smallint unsigned;
+Query OK, 0 rows affected (0.24 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show columns from user2;
++----------+----------------------+------+-----+---------+-------+
+| Field    | Type                 | Null | Key | Default | Extra |
++----------+----------------------+------+-----+---------+-------+
+| username | varchar(10)          | NO   |     | NULL    |       |
+| pid      | smallint(5) unsigned | YES  |     | NULL    |       |
+| id       | smallint(5) unsigned | YES  |     | NULL    |       |
++----------+----------------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> alter table user2 add constraint PK_user2_id primary key (id);
+Query OK, 0 rows affected (0.16 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show columns from user2;
++----------+----------------------+------+-----+---------+-------+
+| Field    | Type                 | Null | Key | Default | Extra |
++----------+----------------------+------+-----+---------+-------+
+| username | varchar(10)          | NO   |     | NULL    |       |
+| pid      | smallint(5) unsigned | YES  |     | NULL    |       |
+| id       | smallint(5) unsigned | NO   | PRI | 0       |       |
++----------+----------------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> alter table user2 add unique (username);
+Query OK, 0 rows affected (0.10 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show create table user2;
++-------+-----------------------------------------------------------------
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+-------------------+
+| Table | Create Table
+
+
+                   |
++-------+-----------------------------------------------------------------
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+-------------------+
+| user2 | CREATE TABLE `user2` (
+  `username` varchar(10) NOT NULL,
+  `pid` smallint(5) unsigned DEFAULT NULL,
+  `id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 |
++-------+-----------------------------------------------------------------
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+-------------------+
+1 row in set (0.00 sec)
+
+mysql> alter table user2 add foreign key (pid) references provinces (id);
+Query OK, 0 rows affected (0.47 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show create table user2;
++-------+-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+---------------------------------------+
+| Table | Create Table
+
+
+
+                                       |
++-------+-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+---------------------------------------+
+| user2 | CREATE TABLE `user2` (
+  `username` varchar(10) NOT NULL,
+  `pid` smallint(5) unsigned DEFAULT NULL,
+  `id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`),
+  KEY `pid` (`pid`),
+  CONSTRAINT `user2_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `provinces` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 |
++-------+-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+---------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> alter table user2 add age tinyint unsigned not null;
+Query OK, 0 rows affected (0.23 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show columns from user2;
++----------+----------------------+------+-----+---------+-------+
+| Field    | Type                 | Null | Key | Default | Extra |
++----------+----------------------+------+-----+---------+-------+
+| username | varchar(10)          | NO   | UNI | NULL    |       |
+| pid      | smallint(5) unsigned | YES  | MUL | NULL    |       |
+| id       | smallint(5) unsigned | NO   | PRI | 0       |       |
+| age      | tinyint(3) unsigned  | NO   |     | NULL    |       |
++----------+----------------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> alter table user2 alter age set default 15;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show columns from user2;
++----------+----------------------+------+-----+---------+-------+
+| Field    | Type                 | Null | Key | Default | Extra |
++----------+----------------------+------+-----+---------+-------+
+| username | varchar(10)          | NO   | UNI | NULL    |       |
+| pid      | smallint(5) unsigned | YES  | MUL | NULL    |       |
+| id       | smallint(5) unsigned | NO   | PRI | 0       |       |
+| age      | tinyint(3) unsigned  | NO   |     | 15      |       |
++----------+----------------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> alter table user2 alter age drop default;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show columns from user2;
++----------+----------------------+------+-----+---------+-------+
+| Field    | Type                 | Null | Key | Default | Extra |
++----------+----------------------+------+-----+---------+-------+
+| username | varchar(10)          | NO   | UNI | NULL    |       |
+| pid      | smallint(5) unsigned | YES  | MUL | NULL    |       |
+| id       | smallint(5) unsigned | NO   | PRI | 0       |       |
+| age      | tinyint(3) unsigned  | NO   |     | NULL    |       |
++----------+----------------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> alter table user2 drop primary key;
+Query OK, 0 rows affected (0.18 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show columns from user2;
++----------+----------------------+------+-----+---------+-------+
+| Field    | Type                 | Null | Key | Default | Extra |
++----------+----------------------+------+-----+---------+-------+
+| username | varchar(10)          | NO   | PRI | NULL    |       |
+| pid      | smallint(5) unsigned | YES  | MUL | NULL    |       |
+| id       | smallint(5) unsigned | NO   |     | 0       |       |
+| age      | tinyint(3) unsigned  | NO   |     | NULL    |       |
++----------+----------------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+//删除约束
+mysql> alter table user2 drop index username;
+Query OK, 0 rows affected (0.21 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show columns from user2;
++----------+----------------------+------+-----+---------+-------+
+| Field    | Type                 | Null | Key | Default | Extra |
++----------+----------------------+------+-----+---------+-------+
+| username | varchar(10)          | NO   |     | NULL    |       |
+| pid      | smallint(5) unsigned | YES  | MUL | NULL    |       |
+| id       | smallint(5) unsigned | NO   |     | 0       |       |
+| age      | tinyint(3) unsigned  | NO   |     | NULL    |       |
++----------+----------------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> show indexes from user2\G;
+*************************** 1. row ***************************
+        Table: user2
+   Non_unique: 1
+     Key_name: pid
+ Seq_in_index: 1
+  Column_name: pid
+    Collation: A
+  Cardinality: 0
+     Sub_part: NULL
+       Packed: NULL
+         Null: YES
+   Index_type: BTREE
+      Comment:
+Index_comment:
+1 row in set (0.00 sec)
+
+ERROR:
+No query specified
+
+//删除外键约束
+mysql> show create table user2;
++-------+-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-----------------+
+| Table | Create Table
+
+
+
+                 |
++-------+-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-----------------+
+| user2 | CREATE TABLE `user2` (
+  `username` varchar(10) NOT NULL,
+  `pid` smallint(5) unsigned DEFAULT NULL,
+  `id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `age` tinyint(3) unsigned NOT NULL,
+  KEY `pid` (`pid`),
+  CONSTRAINT `user2_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `provinces` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 |
++-------+-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-----------------+
+1 row in set (0.00 sec)
+
+mysql> alter table user2 drop foreign key user2_ibfk_1;
+Query OK, 0 rows affected (0.21 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show create table user2;
++-------+-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+------------------+
+| Table | Create Table
+
+
+                  |
++-------+-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+------------------+
+| user2 | CREATE TABLE `user2` (
+  `username` varchar(10) NOT NULL,
+  `pid` smallint(5) unsigned DEFAULT NULL,
+  `id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `age` tinyint(3) unsigned NOT NULL,
+  KEY `pid` (`pid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 |
++-------+-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+------------------+
+1 row in set (0.00 sec)
+
+
+mysql> alter table user2 drop index pid;
+Query OK, 0 rows affected (0.11 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show create table user2;
++-------+-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-----------------------------------------------------------------------------+
+| Table | Create Table
+
+                                                                             |
++-------+-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-----------------------------------------------------------------------------+
+| user2 | CREATE TABLE `user2` (
+  `username` varchar(10) NOT NULL,
+  `pid` smallint(5) unsigned DEFAULT NULL,
+  `id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `age` tinyint(3) unsigned NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 |
++-------+-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-----------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+//修改位置
+mysql> alter table user2 modify id smallint unsigned not null first;
+Query OK, 0 rows affected (0.27 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show columns from user2;
++----------+----------------------+------+-----+---------+-------+
+| Field    | Type                 | Null | Key | Default | Extra |
++----------+----------------------+------+-----+---------+-------+
+| id       | smallint(5) unsigned | NO   |     | NULL    |       |
+| username | varchar(10)          | NO   |     | NULL    |       |
+| pid      | smallint(5) unsigned | YES  |     | NULL    |       |
+| age      | tinyint(3) unsigned  | NO   |     | NULL    |       |
++----------+----------------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+//修改类型
+mysql> alter table user2 modify id tinyint unsigned not null;
+Query OK, 0 rows affected (0.24 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show columns from user2;
++----------+----------------------+------+-----+---------+-------+
+| Field    | Type                 | Null | Key | Default | Extra |
++----------+----------------------+------+-----+---------+-------+
+| id       | tinyint(3) unsigned  | NO   |     | NULL    |       |
+| username | varchar(10)          | NO   |     | NULL    |       |
+| pid      | smallint(5) unsigned | YES  |     | NULL    |       |
+| age      | tinyint(3) unsigned  | NO   |     | NULL    |       |
++----------+----------------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+//change--修改字段名
+
+mysql> alter table user2 change pid p_id tinyint unsigned not null;
+Query OK, 0 rows affected (0.20 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show columns from user2;
++----------+---------------------+------+-----+---------+-------+
+| Field    | Type                | Null | Key | Default | Extra |
++----------+---------------------+------+-----+---------+-------+
+| id       | tinyint(3) unsigned | NO   |     | NULL    |       |
+| username | varchar(10)         | NO   |     | NULL    |       |
+| p_id     | tinyint(3) unsigned | NO   |     | NULL    |       |
+| age      | tinyint(3) unsigned | NO   |     | NULL    |       |
++----------+---------------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+//修改表名
+mysql> alter table user2 rename user3;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> show tables;
++----------------+
+| Tables_in_test |
++----------------+
+| province       |
+| provinces      |
+| tb1            |
+| tb2            |
+| tb3            |
+| tb4            |
+| tb5            |
+| tb6            |
+| user1          |
+| user3          |
++----------------+
+10 rows in set (0.00 sec)
+
+mysql> rename table user3 to user2;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> show tables;
++----------------+
+| Tables_in_test |
++----------------+
+| province       |
+| provinces      |
+| tb1            |
+| tb2            |
+| tb3            |
+| tb4            |
+| tb5            |
+| tb6            |
+| user1          |
+| user2          |
++----------------+
+10 rows in set (0.00 sec)
+
+
+================================================================================================
+
+mysql> create table users(
+    -> id smallint unsigned auto_increment primary key,
+    -> username varchar(20) not null,
+    -> password varchar(32) not null,
+    -> age tinyint unsigned not null default 10,
+    -> sex boolean
+    -> );
+Query OK, 0 rows affected (0.14 sec)
+
+//2种情况null/default;自动编号自动赋值
+mysql> insert users values(null,'Tom','123',18,1);
+Query OK, 1 row affected (0.05 sec)
+
+mysql> insert users values(null,'John','456',22,1);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> select * from users;
++----+----------+----------+-----+------+
+| id | username | password | age | sex  |
++----+----------+----------+-----+------+
+|  1 | Tom      | 123      |  18 |    1 |
+|  2 | John     | 456      |  22 |    1 |
++----+----------+----------+-----+------+
+2 rows in set (0.00 sec)
+
+mysql> insert users values(default,'Rose','789',8,2);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select * from users;
++----+----------+----------+-----+------+
+| id | username | password | age | sex  |
++----+----------+----------+-----+------+
+|  1 | Tom      | 123      |  18 |    1 |
+|  2 | John     | 456      |  22 |    1 |
+|  3 | Rose     | 789      |   8 |    2 |
++----+----------+----------+-----+------+
+3 rows in set (0.00 sec)
+
+mysql> insert users values(null,'Haha','456',22);
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> insert users values(null,'Haha','456',22,null);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from users;
++----+----------+----------+-----+------+
+| id | username | password | age | sex  |
++----+----------+----------+-----+------+
+|  1 | Tom      | 123      |  18 |    1 |
+|  2 | John     | 456      |  22 |    1 |
+|  3 | Rose     | 789      |   8 |    2 |
+|  4 | Haha     | 456      |  22 | NULL |
++----+----------+----------+-----+------+
+4 rows in set (0.00 sec)
+
+mysql> insert users values(default,'Rose','789',8*2-14,2);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> select * from users;
++----+----------+----------+-----+------+
+| id | username | password | age | sex  |
++----+----------+----------+-----+------+
+|  1 | Tom      | 123      |  18 |    1 |
+|  2 | John     | 456      |  22 |    1 |
+|  3 | Rose     | 789      |   8 |    2 |
+|  4 | Haha     | 456      |  22 | NULL |
+|  5 | Rose     | 789      |   2 |    2 |
++----+----------+----------+-----+------+
+5 rows in set (0.00 sec)
+
+mysql> insert users values(default,'Qq','123',default,2);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> select * from users;
++----+----------+----------+-----+------+
+| id | username | password | age | sex  |
++----+----------+----------+-----+------+
+|  1 | Tom      | 123      |  18 |    1 |
+|  2 | John     | 456      |  22 |    1 |
+|  3 | Rose     | 789      |   8 |    2 |
+|  4 | Haha     | 456      |  22 | NULL |
+|  5 | Rose     | 789      |   2 |    2 |
+|  6 | Qq       | 123      |  10 |    2 |
++----+----------+----------+-----+------+
+6 rows in set (0.00 sec)
+
+mysql> insert users values(default,'Jim-a','111',3*7-9,1),(null,'Jim-2',md5('222'),default,1);
+Query OK, 2 rows affected (0.03 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select * from users;
++----+----------+----------------------------------+-----+------+
+| id | username | password                         | age | sex  |
++----+----------+----------------------------------+-----+------+
+|  1 | Tom      | 123                              |  18 |    1 |
+|  2 | John     | 456                              |  22 |    1 |
+|  3 | Rose     | 789                              |   8 |    2 |
+|  4 | Haha     | 456                              |  22 | NULL |
+|  5 | Rose     | 789                              |   2 |    2 |
+|  6 | Qq       | 123                              |  10 |    2 |
+|  7 | Jim-a    | 111                              |  12 |    1 |
+|  8 | Jim-2    | bcbe3365e6ac95ea2c0343a2395834dd |  10 |    1 |
++----+----------+----------------------------------+-----+------+
+8 rows in set (0.00 sec)
+
+//插入的第二种方法
+mysql> insert users set username='Ben',password='999';
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from users;
++----+----------+----------------------------------+-----+------+
+| id | username | password                         | age | sex  |
++----+----------+----------------------------------+-----+------+
+|  1 | Tom      | 123                              |  18 |    1 |
+|  2 | John     | 456                              |  22 |    1 |
+|  3 | Rose     | 789                              |   8 |    2 |
+|  4 | Haha     | 456                              |  22 | NULL |
+|  5 | Rose     | 789                              |   2 |    2 |
+|  6 | Qq       | 123                              |  10 |    2 |
+|  7 | Jim-a    | 111                              |  12 |    1 |
+|  8 | Jim-2    | bcbe3365e6ac95ea2c0343a2395834dd |  10 |    1 |
+|  9 | Ben      | 999                              |  10 | NULL |
++----+----------+----------------------------------+-----+------+
+9 rows in set (0.00 sec)
+
+================================================================================================
+//update
+
+mysql> update users set age=age+5;
+Query OK, 9 rows affected (0.03 sec)
+Rows matched: 9  Changed: 9  Warnings: 0
+
+mysql> select * from users;
++----+----------+----------------------------------+-----+------+
+| id | username | password                         | age | sex  |
++----+----------+----------------------------------+-----+------+
+|  1 | Tom      | 123                              |  23 |    1 |
+|  2 | John     | 456                              |  27 |    1 |
+|  3 | Rose     | 789                              |  13 |    2 |
+|  4 | Haha     | 456                              |  27 | NULL |
+|  5 | Rose     | 789                              |   7 |    2 |
+|  6 | Qq       | 123                              |  15 |    2 |
+|  7 | Jim-a    | 111                              |  17 |    1 |
+|  8 | Jim-2    | bcbe3365e6ac95ea2c0343a2395834dd |  15 |    1 |
+|  9 | Ben      | 999                              |  15 | NULL |
++----+----------+----------------------------------+-----+------+
+9 rows in set (0.00 sec)
+
+mysql> update users set age=age-id,sex=0;
+Query OK, 9 rows affected (0.04 sec)
+Rows matched: 9  Changed: 9  Warnings: 0
+
+mysql> select * from users;
++----+----------+----------------------------------+-----+------+
+| id | username | password                         | age | sex  |
++----+----------+----------------------------------+-----+------+
+|  1 | Tom      | 123                              |  22 |    0 |
+|  2 | John     | 456                              |  25 |    0 |
+|  3 | Rose     | 789                              |  10 |    0 |
+|  4 | Haha     | 456                              |  23 |    0 |
+|  5 | Rose     | 789                              |   2 |    0 |
+|  6 | Qq       | 123                              |   9 |    0 |
+|  7 | Jim-a    | 111                              |  10 |    0 |
+|  8 | Jim-2    | bcbe3365e6ac95ea2c0343a2395834dd |   7 |    0 |
+|  9 | Ben      | 999                              |   6 |    0 |
++----+----------+----------------------------------+-----+------+
+9 rows in set (0.00 sec)
+
+mysql> update users set age=age+10 where id%2=0;
+Query OK, 4 rows affected (0.14 sec)
+Rows matched: 4  Changed: 4  Warnings: 0
+
+mysql> select * from users;
++----+----------+----------------------------------+-----+------+
+| id | username | password                         | age | sex  |
++----+----------+----------------------------------+-----+------+
+|  1 | Tom      | 123                              |  22 |    0 |
+|  2 | John     | 456                              |  35 |    0 |
+|  3 | Rose     | 789                              |  10 |    0 |
+|  4 | Haha     | 456                              |  33 |    0 |
+|  5 | Rose     | 789                              |   2 |    0 |
+|  6 | Qq       | 123                              |  19 |    0 |
+|  7 | Jim-a    | 111                              |  10 |    0 |
+|  8 | Jim-2    | bcbe3365e6ac95ea2c0343a2395834dd |  17 |    0 |
+|  9 | Ben      | 999                              |   6 |    0 |
++----+----------+----------------------------------+-----+------+
+9 rows in set (0.00 sec)
+
+===============================================================================================
+//删除记录
+
+mysql> delete from users where id=6;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from users;
++----+----------+----------------------------------+-----+------+
+| id | username | password                         | age | sex  |
++----+----------+----------------------------------+-----+------+
+|  1 | Tom      | 123                              |  22 |    0 |
+|  2 | John     | 456                              |  35 |    0 |
+|  3 | Rose     | 789                              |  10 |    0 |
+|  4 | Haha     | 456                              |  33 |    0 |
+|  5 | Rose     | 789                              |   2 |    0 |
+|  7 | Jim-a    | 111                              |  10 |    0 |
+|  8 | Jim-2    | bcbe3365e6ac95ea2c0343a2395834dd |  17 |    0 |
+|  9 | Ben      | 999                              |   6 |    0 |
++----+----------+----------------------------------+-----+------+
+8 rows in set (0.00 sec)
+
+mysql> insert users values(null,'111','222',33,null);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> select * from users;
++----+----------+----------------------------------+-----+------+
+| id | username | password                         | age | sex  |
++----+----------+----------------------------------+-----+------+
+|  1 | Tom      | 123                              |  22 |    0 |
+|  2 | John     | 456                              |  35 |    0 |
+|  3 | Rose     | 789                              |  10 |    0 |
+|  4 | Haha     | 456                              |  33 |    0 |
+|  5 | Rose     | 789                              |   2 |    0 |
+|  7 | Jim-a    | 111                              |  10 |    0 |
+|  8 | Jim-2    | bcbe3365e6ac95ea2c0343a2395834dd |  17 |    0 |
+|  9 | Ben      | 999                              |   6 |    0 |
+| 10 | 111      | 222                              |  33 | NULL |
++----+----------+----------------------------------+-----+------+
+9 rows in set (0.00 sec)
+
+================================================================================================
+
+
+//select
+mysql> select id,username from users;
++----+----------+
+| id | username |
++----+----------+
+|  1 | Tom      |
+|  2 | John     |
+|  3 | Rose     |
+|  4 | Haha     |
+|  5 | Rose     |
+|  7 | Jim-a    |
+|  8 | Jim-2    |
+|  9 | Ben      |
+| 10 | 111      |
++----+----------+
+9 rows in set (0.00 sec)
+
+mysql> select username,id from users;
++----------+----+
+| username | id |
++----------+----+
+| Tom      |  1 |
+| John     |  2 |
+| Rose     |  3 |
+| Haha     |  4 |
+| Rose     |  5 |
+| Jim-a    |  7 |
+| Jim-2    |  8 |
+| Ben      |  9 |
+| 111      | 10 |
++----------+----+
+9 rows in set (0.00 sec)
+
+mysql> select users.id,users.username from users;
++----+----------+
+| id | username |
++----+----------+
+|  1 | Tom      |
+|  2 | John     |
+|  3 | Rose     |
+|  4 | Haha     |
+|  5 | Rose     |
+|  7 | Jim-a    |
+|  8 | Jim-2    |
+|  9 | Ben      |
+| 10 | 111      |
++----+----------+
+9 rows in set (0.00 sec)
+
+mysql> select id as userId,username as uName from users;
++--------+-------+
+| userId | uName |
++--------+-------+
+|      1 | Tom   |
+|      2 | John  |
+|      3 | Rose  |
+|      4 | Haha  |
+|      5 | Rose  |
+|      7 | Jim-a |
+|      8 | Jim-2 |
+|      9 | Ben   |
+|     10 | 111   |
++--------+-------+
+9 rows in set (0.00 sec)
+
+//注意这种写法-要补全；很容易出现错误
+mysql> select id username from users;
++----------+
+| username |
++----------+
+|        1 |
+|        2 |
+|        3 |
+|        4 |
+|        5 |
+|        7 |
+|        8 |
+|        9 |
+|       10 |
++----------+
+9 rows in set (0.00 sec)
+
+mysql> select id as username from users;
++----------+
+| username |
++----------+
+|        1 |
+|        2 |
+|        3 |
+|        4 |
+|        5 |
+|        7 |
+|        8 |
+|        9 |
+|       10 |
++----------+
+9 rows in set (0.00 sec)
+
+mysql> select id , username from users;
++----+----------+
+| id | username |
++----+----------+
+|  1 | Tom      |
+|  2 | John     |
+|  3 | Rose     |
+|  4 | Haha     |
+|  5 | Rose     |
+|  7 | Jim-a    |
+|  8 | Jim-2    |
+|  9 | Ben      |
+| 10 | 111      |
++----+----------+
+9 rows in set (0.00 sec)
+================================================================================================
+
+//分组 group by
+
+mysql> select sex from users group by sex; 指定列名称，一般不指定位置--位置是数在第几个出现
++------+
+| sex  |
++------+
+| NULL |
+|    0 |
++------+
+2 rows in set (0.00 sec)
+
+
+mysql> select sex from users group by 1;   指定位置--按位置第1个出现的sex分组；
++------+
+| sex  |
++------+
+| NULL |
+|    0 |
++------+
+2 rows in set (0.00 sec)
+
+
+mysql> select sex,age from users group by sex having age>25;having--加条件的指定，对分组进行限定
++------+-----+
+| sex  | age |
++------+-----+
+| NULL |  33 |
++------+-----+
+1 row in set (0.00 sec)
+
+mysql> select sex from users group by sex having count(id) >=2;
++------+
+| sex  |
++------+
+|    0 |
++------+
+1 row in set (0.00 sec)
+
+================================================================================================
+
+//order by
+mysql> select * from users order by id desc;
++----+----------+----------------------------------+-----+------+
+| id | username | password                         | age | sex  |
++----+----------+----------------------------------+-----+------+
+| 10 | 111      | 222                              |  33 | NULL |
+|  9 | Ben      | 999                              |   6 |    0 |
+|  8 | Jim-2    | bcbe3365e6ac95ea2c0343a2395834dd |  17 |    0 |
+|  7 | Jim-a    | 111                              |  10 |    0 |
+|  5 | Rose     | 789                              |   2 |    0 |
+|  4 | Haha     | 456                              |  33 |    0 |
+|  3 | Rose     | 789                              |  10 |    0 |
+|  2 | John     | 456                              |  35 |    0 |
+|  1 | Tom      | 123                              |  22 |    0 |
++----+----------+----------------------------------+-----+------+
+9 rows in set (0.00 sec)
+
+mysql> select * from users order by age,id desc;
++----+----------+----------------------------------+-----+------+
+| id | username | password                         | age | sex  |
++----+----------+----------------------------------+-----+------+
+|  5 | Rose     | 789                              |   2 |    0 |
+|  9 | Ben      | 999                              |   6 |    0 |
+|  7 | Jim-a    | 111                              |  10 |    0 |
+|  3 | Rose     | 789                              |  10 |    0 |
+|  8 | Jim-2    | bcbe3365e6ac95ea2c0343a2395834dd |  17 |    0 |
+|  1 | Tom      | 123                              |  22 |    0 |
+| 10 | 111      | 222                              |  33 | NULL |
+|  4 | Haha     | 456                              |  33 |    0 |
+|  2 | John     | 456                              |  35 |    0 |
++----+----------+----------------------------------+-----+------+
+9 rows in set (0.00 sec)
+================================================================================================
+
+//limit
+
+mysql> select * from users;
++----+----------+----------------------------------+-----+------+
+| id | username | password                         | age | sex  |
++----+----------+----------------------------------+-----+------+
+|  1 | Tom      | 123                              |  22 |    0 |
+|  2 | John     | 456                              |  35 |    0 |
+|  3 | Rose     | 789                              |  10 |    0 |
+|  4 | Haha     | 456                              |  33 |    0 |
+|  5 | Rose     | 789                              |   2 |    0 |
+|  7 | Jim-a    | 111                              |  10 |    0 |
+|  8 | Jim-2    | bcbe3365e6ac95ea2c0343a2395834dd |  17 |    0 |
+|  9 | Ben      | 999                              |   6 |    0 |
+| 10 | 111      | 222                              |  33 | NULL |
++----+----------+----------------------------------+-----+------+
+9 rows in set (0.00 sec)
+
+mysql> select * from users order by id desc limit 2,2;
++----+----------+----------------------------------+-----+------+
+| id | username | password                         | age | sex  |
++----+----------+----------------------------------+-----+------+
+|  8 | Jim-2    | bcbe3365e6ac95ea2c0343a2395834dd |  17 |    0 |
+|  7 | Jim-a    | 111                              |  10 |    0 |
++----+----------+----------------------------------+-----+------+
+2 rows in set (0.00 sec)
+
+//insert 将查询结果写到记录表
+
+mysql> create table test(
+    -> id tinyint unsigned primary key auto_increment,
+    -> username varchar(20)
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> insert test(username) select username from users where age>=30;
+Query OK, 3 rows affected (0.04 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from test;
++----+----------+
+| id | username |
++----+----------+
+|  1 | John     |
+|  2 | Haha     |
+|  3 | 111      |
++----+----------+
+3 rows in set (0.00 sec)
+
+================================================================================================
+================================================================================================
+创建数据表
+CREATE TABLE IF NOT EXISTS tdb_goods(
+    goods_id    SMALLINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    goods_name  VARCHAR(150) NOT NULL,
+    goods_cate  VARCHAR(40)  NOT NULL,
+    brand_name  VARCHAR(40)  NOT NULL,
+    goods_price DECIMAL(15,3) UNSIGNED NOT NULL DEFAULT 0,
+    is_show     BOOLEAN NOT NULL DEFAULT 1,
+    is_saleoff  BOOLEAN NOT NULL DEFAULT 0
+);
+写入记录
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('R510VC 15.6英寸笔记本','笔记本','华硕','3399',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('Y400N 14.0英寸笔记本电脑','笔记本','联想','4899',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('G150TH 15.6英寸游戏本','游戏本','雷神','8499',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('X550CC 15.6英寸笔记本','笔记本','华硕','2799',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('X240(20ALA0EYCD) 12.5英寸超极本','超级本','联想','4999',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('U330P 13.3英寸超极本','超级本','联想','4299',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('SVP13226SCB 13.3英寸触控超极本','超级本','索尼','7999',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('iPad mini MD531CH/A 7.9英寸平板电脑','平板电脑','苹果','1998',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('iPad Air MD788CH/A 9.7英寸平板电脑 （16G WiFi版）','平板电脑','苹果','3388',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES(' iPad mini ME279CH/A 配备 Retina 显示屏 7.9英寸平板电脑 （16G WiFi版）','平板电脑','苹果','2788',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('IdeaCentre C340 20英寸一体电脑 ','台式机','联想','3499',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('Vostro 3800-R1206 台式电脑','台式机','戴尔','2899',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('iMac ME086CH/A 21.5英寸一体电脑','台式机','苹果','9188',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('AT7-7414LP 台式电脑 （i5-3450四核 4G 500G 2G独显 DVD 键鼠 Linux ）','台式机','宏碁','3699',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('Z220SFF F4F06PA工作站','服务器/工作站','惠普','4288',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('PowerEdge T110 II服务器','服务器/工作站','戴尔','5388',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('Mac Pro MD878CH/A 专业级台式电脑','服务器/工作站','苹果','28888',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES(' HMZ-T3W 头戴显示设备','笔记本配件','索尼','6999',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('商务双肩背包','笔记本配件','索尼','99',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('X3250 M4机架式服务器 2583i14','服务器/工作站','IBM','6888',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('玄龙精英版 笔记本散热器','笔记本配件','九州风神','',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES(' HMZ-T3W 头戴显示设备','笔记本配件','索尼','6999',DEFAULT,DEFAULT);
+INSERT tdb_goods (goods_name,goods_cate,brand_name,goods_price,is_show,is_saleoff) VALUES('商务双肩背包','笔记本配件','索尼','99',DEFAULT,DEFAULT);
+
+////////////////////////////////////
+
+mysql> select * from tdb_goods\G;
+
+mysql> select avg(goods_price) from tdb_goods;
++------------------+
+| avg(goods_price) |
++------------------+
+|     5391.3043478 |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> select round(avg(goods_price),2) from tdb_goods;
++---------------------------+
+| round(avg(goods_price),2) |
++---------------------------+
+|                   5391.30 |
++---------------------------+
+1 row in set (0.00 sec)
+
+mysql> select goods_id,goods_name,goods_price from tdb_goods
+    -> where goods_price>=5391.30;
++----------+----------------------------------+-------------+
+| goods_id | goods_name                       | goods_price |
++----------+----------------------------------+-------------+
+|        3 | G150TH 15.6英寸游戏本            |    8499.000 |
+|        7 | SVP13226SCB 13.3英寸触控超极本   |    7999.000 |
+|       13 | iMac ME086CH/A 21.5英寸一体电脑  |    9188.000 |
+|       17 | Mac Pro MD878CH/A 专业级台式电脑 |   28888.000 |
+|       18 |  HMZ-T3W 头戴显示设备            |    6999.000 |
+|       20 | X3250 M4机架式服务器 2583i14     |    6888.000 |
+|       22 |  HMZ-T3W 头戴显示设备            |    6999.000 |
++----------+----------------------------------+-------------+
+7 rows in set (0.00 sec)
+
+///子查询
+mysql> select goods_id,goods_name,goods_price from tdb_goods
+    -> where goods_price>=
+    -> ( select round(avg(goods_price),2) from tdb_goods );
++----------+----------------------------------+-------------+
+| goods_id | goods_name                       | goods_price |
++----------+----------------------------------+-------------+
+|        3 | G150TH 15.6英寸游戏本            |    8499.000 |
+|        7 | SVP13226SCB 13.3英寸触控超极本   |    7999.000 |
+|       13 | iMac ME086CH/A 21.5英寸一体电脑  |    9188.000 |
+|       17 | Mac Pro MD878CH/A 专业级台式电脑 |   28888.000 |
+|       18 |  HMZ-T3W 头戴显示设备            |    6999.000 |
+|       20 | X3250 M4机架式服务器 2583i14     |    6888.000 |
+|       22 |  HMZ-T3W 头戴显示设备            |    6999.000 |
++----------+----------------------------------+-------------+
+7 rows in set (0.00 sec)
+
+
+mysql> select goods_price from tdb_goods where goods_cate='超级本';
++-------------+
+| goods_price |
++-------------+
+|    4999.000 |
+|    4299.000 |
+|    7999.000 |
++-------------+
+3 rows in set (0.00 sec)
+
+//any some 符合任何一个就行
+mysql> select goods_id,goods_name,goods_price from tdb_goods
+    -> where goods_price>=
+    -> any (select goods_price from tdb_goods where goods_cate='超级本');
++----------+----------------------------------+-------------+
+| goods_id | goods_name                       | goods_price |
++----------+----------------------------------+-------------+
+|        2 | Y400N 14.0英寸笔记本电脑         |    4899.000 |
+|        3 | G150TH 15.6英寸游戏本            |    8499.000 |
+|        5 | X240(20ALA0EYCD) 12.5英寸超极本  |    4999.000 |
+|        6 | U330P 13.3英寸超极本             |    4299.000 |
+|        7 | SVP13226SCB 13.3英寸触控超极本   |    7999.000 |
+|       13 | iMac ME086CH/A 21.5英寸一体电脑  |    9188.000 |
+|       16 | PowerEdge T110 II服务器          |    5388.000 |
+|       17 | Mac Pro MD878CH/A 专业级台式电脑 |   28888.000 |
+|       18 |  HMZ-T3W 头戴显示设备            |    6999.000 |
+|       20 | X3250 M4机架式服务器 2583i14     |    6888.000 |
+|       22 |  HMZ-T3W 头戴显示设备            |    6999.000 |
++----------+----------------------------------+-------------+
+11 rows in set (0.00 sec)
+
+//all 符合全部
+mysql> select goods_id,goods_name,goods_price from tdb_goods
+    ->  where goods_price>=
+    -> all (select goods_price from tdb_goods where goods_cate='超级本');
++----------+----------------------------------+-------------+
+| goods_id | goods_name                       | goods_price |
++----------+----------------------------------+-------------+
+|        3 | G150TH 15.6英寸游戏本            |    8499.000 |
+|        7 | SVP13226SCB 13.3英寸触控超极本   |    7999.000 |
+|       13 | iMac ME086CH/A 21.5英寸一体电脑  |    9188.000 |
+|       17 | Mac Pro MD878CH/A 专业级台式电脑 |   28888.000 |
++----------+----------------------------------+-------------+
+4 rows in set (0.00 sec)
+
+//答案自己输出看（比较运算符，随意更改）
+mysql> select goods_id,goods_name,goods_price from tdb_goods
+    ->  where goods_price =
+    -> all (select goods_price from tdb_goods where goods_cate='超级本');
+	
+mysql> select goods_id,goods_name,goods_price from tdb_goods
+    ->  where goods_price <>
+    -> all (select goods_price from tdb_goods where goods_cate='超级本');
+
+================================================================================================
+
+//使用外键，建立多表关系查询
+mysql> create table if not exists tdb_goods_cates(
+    -> cate_id smallint unsigned primary key auto_increment,
+    -> cate_name varchar(40) not null
+    -> );
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> insert tdb_goods_cates(cate_name)
+    -> select goods_cate from tdb_goods group by goods_cate;
+Query OK, 7 rows affected (0.09 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> select * from tdb_goods_cates;
++---------+---------------+
+| cate_id | cate_name     |
++---------+---------------+
+|       1 | 台式机        |
+|       2 | 平板电脑      |
+|       3 | 服务器/工作站 |
+|       4 | 游戏本        |
+|       5 | 笔记本        |
+|       6 | 笔记本配件    |
+|       7 | 超级本        |
++---------+---------------+
+7 rows in set (0.00 sec)
+
+================================================================================================
+//多表更新--连接类型
+//inner join
+mysql> update tdb_goods inner join tdb_goods_cates on goods_cate = cate_name
+    -> set goods_cate = cate_id;
+Query OK, 23 rows affected (0.11 sec)
+Rows matched: 23  Changed: 23  Warnings: 0
+
+mysql> select * from tdb_goods\G;
+
+//第二种方法
+mysql> create table tdb_goods_brands(
+    -> brand_id smallint unsigned primary key auto_increment,
+    -> brand_name varchar(40) not null
+    -> )
+    -> select brand_name from tdb_goods group by brand_name;
+Query OK, 10 rows affected (0.10 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> show tables;
+mysql> select * from tdb_goods_brands\G;
+//出现以下错误因为不知道是哪个表的brand_name，所以要给表起别名；
+mysql> update tdb_goods inner join tdb_goods_brands on brand_name = brand_name
+    -> set brand_name = brand_id;
+ERROR 1052 (23000): Column 'brand_name' in field list is ambiguous
+
+这是正确的写法
+mysql> update tdb_goods as g inner join tdb_goods_brands as b on g.brand_name = b.brand_name
+    -> set g.brand_name = b.brand_id;
+Query OK, 23 rows affected (0.04 sec)
+Rows matched: 23  Changed: 23  Warnings: 0
+
+mysql> select * from tdb_goods\G;
+mysql> show columns from tdb_goods;//tdb_goods还是字符型varchar，改成数字型--以下是修改表结构
+
+mysql> alter table tdb_goods
+    -> change goods_cate cate_id smallint unsigned not null,
+    -> change brand_name brand_id smallint unsigned not null;
+Query OK, 23 rows affected (0.25 sec)
+Records: 23  Duplicates: 0  Warnings: 0
+
+mysql> show columns from tdb_goods;
+
+
+================================================================================================
+//插入数据
+INSERT tdb_goods_cates(cate_name) VALUES('路由器'),('交换机'),('网卡');
+INSERT tdb_goods_brands(brand_name) VALUES('海尔'),('清华同方'),('神舟');
+INSERT tdb_goods(goods_name,cate_id,brand_id,goods_price) VALUES(' LaserJet Pro P1606dn 黑白激光打印机','12','4','1849');
+//连接
+//别名唯一时，不用加as设置别名
+
+//inner join 内连接-仅显示符合连接条件的条目
+mysql> select goods_id,goods_name,cate_name from tdb_goods inner join tdb_goods_cates on tdb_goods.cate_id=tdb_goods_cates.cate_id;看最后
+
+//left join 左内连接-仅显示符合连接条件的条目 显示左表中的全部
+mysql> select goods_id,goods_name,cate_name from tdb_goods left join tdb_goods_cates on tdb_goods.cate_id=tdb_goods_cates.cate_id;看最后
+
+//right join 右内连接-仅显示符合连接条件的条目 显示右表中的全部
+mysql> select goods_id,goods_name,cate_name from tdb_goods right join tdb_goods_cates on tdb_goods.cate_id=tdb_goods_cates.cate_id;看最后
+
+//3表连接(通过内连接实现)
+mysql> select goods_id,goods_name,cate_name,brand_name,goods_price from tdb_goods as g
+	   inner join tdb_goods_cates as c on g.cate_id=c.cate_id
+       inner join tdb_goods_brands as b on g.brand_id=b.brand_id\G;
+	   
+
+================================================================================================
+无限分类的数据表设计
+CREATE TABLE tdb_goods_types(
+     type_id   SMALLINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+     type_name VARCHAR(20) NOT NULL,
+     parent_id SMALLINT UNSIGNED NOT NULL DEFAULT 0
+); 
+
+  INSERT tdb_goods_types(type_name,parent_id) VALUES('家用电器',DEFAULT);
+  INSERT tdb_goods_types(type_name,parent_id) VALUES('电脑、办公',DEFAULT);
+  INSERT tdb_goods_types(type_name,parent_id) VALUES('大家电',1);
+  INSERT tdb_goods_types(type_name,parent_id) VALUES('生活电器',1);
+  INSERT tdb_goods_types(type_name,parent_id) VALUES('平板电视',3);
+  INSERT tdb_goods_types(type_name,parent_id) VALUES('空调',3);
+  INSERT tdb_goods_types(type_name,parent_id) VALUES('电风扇',4);
+  INSERT tdb_goods_types(type_name,parent_id) VALUES('饮水机',4);
+  INSERT tdb_goods_types(type_name,parent_id) VALUES('电脑整机',2);
+  INSERT tdb_goods_types(type_name,parent_id) VALUES('电脑配件',2);
+  INSERT tdb_goods_types(type_name,parent_id) VALUES('笔记本',9);
+  INSERT tdb_goods_types(type_name,parent_id) VALUES('超级本',9);
+  INSERT tdb_goods_types(type_name,parent_id) VALUES('游戏本',9);
+  INSERT tdb_goods_types(type_name,parent_id) VALUES('CPU',10);
+  INSERT tdb_goods_types(type_name,parent_id) VALUES('主机',10);
+
+mysql> select * from tdb_goods_types;
++---------+------------+-----------+
+| type_id | type_name  | parent_id |
++---------+------------+-----------+
+|       1 | 家用电器   |         0 |
+|       2 | 电脑、办公 |         0 |
+|       3 | 大家电     |         1 |
+|       4 | 生活电器   |         1 |
+|       5 | 平板电视   |         3 |
+|       6 | 空调       |         3 |
+|       7 | 电风扇     |         4 |
+|       8 | 饮水机     |         4 |
+|       9 | 电脑整机   |         2 |
+|      10 | 电脑配件   |         2 |
+|      11 | 笔记本     |         9 |
+|      12 | 超级本     |         9 |
+|      13 | 游戏本     |         9 |
+|      14 | CPU        |        10 |
+|      15 | 主机       |        10 |
++---------+------------+-----------+
+15 rows in set (0.00 sec)
+//2种一样结果--只是从谁中选
+mysql> select s.type_id,s.type_name,p.type_name from tdb_goods_types as s left join tdb_goods_types as p on s.parent_id=p.type_id;
++---------+------------+------------+
+| type_id | type_name  | type_name  |
++---------+------------+------------+
+|       1 | 家用电器   | NULL       |
+|       2 | 电脑、办公 | NULL       |
+|       3 | 大家电     | 家用电器   |
+|       4 | 生活电器   | 家用电器   |
+|       5 | 平板电视   | 大家电     |
+|       6 | 空调       | 大家电     |
+|       7 | 电风扇     | 生活电器   |
+|       8 | 饮水机     | 生活电器   |
+|       9 | 电脑整机   | 电脑、办公 |
+|      10 | 电脑配件   | 电脑、办公 |
+|      11 | 笔记本     | 电脑整机   |
+|      12 | 超级本     | 电脑整机   |
+|      13 | 游戏本     | 电脑整机   |
+|      14 | CPU        | 电脑配件   |
+|      15 | 主机       | 电脑配件   |
++---------+------------+------------+
+15 rows in set (0.03 sec)  
+mysql> select p.type_id,p.type_name,s.type_name from tdb_goods_types as p left j
+oin tdb_goods_types as s on p.parent_id=s.type_id;
++---------+------------+------------+
+| type_id | type_name  | type_name  |
++---------+------------+------------+
+|       1 | 家用电器   | NULL       |
+|       2 | 电脑、办公 | NULL       |
+|       3 | 大家电     | 家用电器   |
+|       4 | 生活电器   | 家用电器   |
+|       5 | 平板电视   | 大家电     |
+|       6 | 空调       | 大家电     |
+|       7 | 电风扇     | 生活电器   |
+|       8 | 饮水机     | 生活电器   |
+|       9 | 电脑整机   | 电脑、办公 |
+|      10 | 电脑配件   | 电脑、办公 |
+|      11 | 笔记本     | 电脑整机   |
+|      12 | 超级本     | 电脑整机   |
+|      13 | 游戏本     | 电脑整机   |
+|      14 | CPU        | 电脑配件   |
+|      15 | 主机       | 电脑配件   |
++---------+------------+------------+
+15 rows in set (0.00 sec)
+
+
+mysql> select p.type_id,p.type_name,s.type_name from tdb_goods_types as p left join tdb_goods_types as s on s.parent_id=p.type_id;
++---------+------------+-----------+
+| type_id | type_name  | type_name |
++---------+------------+-----------+
+|       1 | 家用电器   | 大家电    |
+|       1 | 家用电器   | 生活电器  |
+|       2 | 电脑、办公 | 电脑整机  |
+|       2 | 电脑、办公 | 电脑配件  |
+|       3 | 大家电     | 平板电视  |
+|       3 | 大家电     | 空调      |
+|       4 | 生活电器   | 电风扇    |
+|       4 | 生活电器   | 饮水机    |
+|       5 | 平板电视   | NULL      |
+|       6 | 空调       | NULL      |
+|       7 | 电风扇     | NULL      |
+|       8 | 饮水机     | NULL      |
+|       9 | 电脑整机   | 笔记本    |
+|       9 | 电脑整机   | 超级本    |
+|       9 | 电脑整机   | 游戏本    |
+|      10 | 电脑配件   | CPU       |
+|      10 | 电脑配件   | 主机      |
+|      11 | 笔记本     | NULL      |
+|      12 | 超级本     | NULL      |
+|      13 | 游戏本     | NULL      |
+|      14 | CPU        | NULL      |
+|      15 | 主机       | NULL      |
++---------+------------+-----------+
+22 rows in set (0.00 sec)
+
+mysql> select p.type_id,p.type_name,s.type_name from tdb_goods_types as p left j
+oin tdb_goods_types as s on s.parent_id=p.type_id group by p.type_name;
++---------+------------+-----------+
+| type_id | type_name  | type_name |
++---------+------------+-----------+
+|      14 | CPU        | NULL      |
+|      15 | 主机       | NULL      |
+|       3 | 大家电     | 平板电视  |
+|       1 | 家用电器   | 大家电    |
+|       5 | 平板电视   | NULL      |
+|      13 | 游戏本     | NULL      |
+|       4 | 生活电器   | 电风扇    |
+|       2 | 电脑、办公 | 电脑整机  |
+|       9 | 电脑整机   | 笔记本    |
+|      10 | 电脑配件   | CPU       |
+|       7 | 电风扇     | NULL      |
+|       6 | 空调       | NULL      |
+|      11 | 笔记本     | NULL      |
+|      12 | 超级本     | NULL      |
+|       8 | 饮水机     | NULL      |
++---------+------------+-----------+
+15 rows in set (0.00 sec)
+
+
+mysql> select p.type_id,p.type_name,s.type_name from tdb_goods_types as p left join tdb_goods_types as s on s.parent_id=p.type_id group by p.type_name order by p.type_id;
++---------+------------+-----------+
+| type_id | type_name  | type_name |
++---------+------------+-----------+
+|       1 | 家用电器   | 大家电    |
+|       2 | 电脑、办公 | 电脑整机  |
+|       3 | 大家电     | 平板电视  |
+|       4 | 生活电器   | 电风扇    |
+|       5 | 平板电视   | NULL      |
+|       6 | 空调       | NULL      |
+|       7 | 电风扇     | NULL      |
+|       8 | 饮水机     | NULL      |
+|       9 | 电脑整机   | 笔记本    |
+|      10 | 电脑配件   | CPU       |
+|      11 | 笔记本     | NULL      |
+|      12 | 超级本     | NULL      |
+|      13 | 游戏本     | NULL      |
+|      14 | CPU        | NULL      |
+|      15 | 主机       | NULL      |
++---------+------------+-----------+
+15 rows in set (0.00 sec)
+
+mysql> select p.type_id,p.type_name,count(s.type_name) as children_count from td
+b_goods_types as p left join tdb_goods_types as s on s.parent_id=p.type_id group
+ by p.type_name order by p.type_id;
++---------+------------+----------------+
+| type_id | type_name  | children_count |
++---------+------------+----------------+
+|       1 | 家用电器   |              2 |
+|       2 | 电脑、办公 |              2 |
+|       3 | 大家电     |              2 |
+|       4 | 生活电器   |              2 |
+|       5 | 平板电视   |              0 |
+|       6 | 空调       |              0 |
+|       7 | 电风扇     |              0 |
+|       8 | 饮水机     |              0 |
+|       9 | 电脑整机   |              3 |
+|      10 | 电脑配件   |              2 |
+|      11 | 笔记本     |              0 |
+|      12 | 超级本     |              0 |
+|      13 | 游戏本     |              0 |
+|      14 | CPU        |              0 |
+|      15 | 主机       |              0 |
++---------+------------+----------------+
+15 rows in set (0.00 sec)
+================================================================================================
+////多表删除
+mysql> select * from tdb_goods\G;
+
+mysql> select goods_id,goods_name from tdb_goods group by goods_name having count(goods_name) >= 2;
++----------+-----------------------+
+| goods_id | goods_name            |
++----------+-----------------------+
+|       18 |  HMZ-T3W 头戴显示设备 |
+|       19 | 商务双肩背包          |
++----------+-----------------------+
+2 rows in set (0.00 sec)
+
+
+mysql> delete t1 from tdb_goods as t1 left join (select goods_id,goods_name from
+ tdb_goods group by goods_name having count(goods_name) >=2) as t2 on t1.goods_n
+ame = t2.goods_name where t1.goods_id>t2.goods_id;
+
+mysql> select * from tdb_goods\G;
+================================================================================================
+字符函数 --可以嵌套
+
+mysql> use test
+mysql> show tables;
++------------------+
+| Tables_in_test   |
++------------------+
+| province         |
+| provinces        |
+| tb1              |
+| tb2              |
+| tb3              |
+| tb4              |
+| tb5              |
+| tb6              |
+| tdb_goods        |
+| tdb_goods_brands |
+| tdb_goods_cates  |
+| tdb_goods_types  |
+| test             |
+| user1            |
+| user2            |
+| users            |
++------------------+
+mysql> select * from test;
++----+----------+
+| id | username |
++----+----------+
+|  1 | John     |
+|  2 | Haha     |
+|  3 | 111      |
++----+----------+
+3 rows in set (0.17 sec)
+
+//concat()
+
+mysql> select concat('welcome','beijing');
++-----------------------------+
+| concat('welcome','beijing') |
++-----------------------------+
+| welcomebeijing              |
++-----------------------------+
+1 row in set (0.00 sec)
+
+
+mysql> select concat('welcome','to','beijing');
++----------------------------------+
+| concat('welcome','to','beijing') |
++----------------------------------+
+| welcometobeijing                 |
++----------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select concat(id,'->',username) as fullname from test;
++----------+
+| fullname |
++----------+
+| 1->John  |
+| 2->Haha  |
+| 3->111   |
++----------+
+3 rows in set (0.00 sec)
+
+//concat_ws最少3个参数
+
+mysql> select concat_ws('|','A','B','C');
++----------------------------+
+| concat_ws('|','A','B','C') |
++----------------------------+
+| A|B|C                      |
++----------------------------+
+1 row in set (0.00 sec)
+//format数组格式化
+mysql> select format(123456.99,2);
++---------------------+
+| format(123456.99,2) |
++---------------------+
+| 123,456.99          |
++---------------------+
+1 row in set (0.00 sec)
+mysql> select format(123456.34,1);
++---------------------+
+| format(123456.34,1) |
++---------------------+
+| 123,456.3           |
++---------------------+
+1 row in set (0.00 sec)
+mysql> select format(123456.34,0);
++---------------------+
+| format(123456.34,0) |
++---------------------+
+| 123,456             |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> select left('MySQL',2);
++-----------------+
+| left('MySQL',2) |
++-----------------+
+| My              |
++-----------------+
+1 row in set (0.00 sec)
+
+表test2
++----------+-----------------------+
+|first_name | last_name           |
++----------+-----------------------+
+|       A |  B						|
+|       C |  123					|
+|    Tom% |  D					|
++----------+-----------------------+
+
+select % from test2 where first_name like '%1%%' escape '1';=>Tom%
++----------+-----------------------+
+|first_name | last_name           |
++----------+-----------------------+
+|    Tom% |  D					|
++----------+-----------------------+
+
+%任意字符
+_任意一个字符
+================================================================================================
+
+
+
+
+
+
+
+
+
+
